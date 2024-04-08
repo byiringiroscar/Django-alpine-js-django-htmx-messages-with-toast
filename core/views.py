@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from core.models import Event
+from django.contrib import messages
 
 # Create your views here.
 def event_detail(request, pk):
@@ -13,6 +14,7 @@ def event_detail(request, pk):
 def subscribe(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.users.add(request.user)
+    messages.success(request, f'You have subscribed to Event {event.name}')
     context = {
         'event': event
     }
@@ -23,9 +25,11 @@ def subscribe(request, pk):
 def unsubscribe(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.users.remove(request.user)
+    messages.success(request, f'You have unsubscribed from Event {event.name}')
     context = {
         'event': event
     }
+
     response = render(request, 'core/partials/userlist.html', context)
     trigger_client_event(response, 'subscribe', {})
     return response
