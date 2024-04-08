@@ -19,13 +19,13 @@ def subscribe(request, pk):
         'event': event
     }
     response = render(request, 'core/partials/user_li.html', context)
-    trigger_client_event(response, 'subscribe', {})
+    trigger_client_event(response, 'subscribe', {}) # Trigger the event on the client side to update the UI
     return response
 
 def unsubscribe(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.users.remove(request.user)
-    messages.success(request, f'You have unsubscribed from Event {event.name}')
+    messages.error(request, f'You have unsubscribed from Event {event.name}')
     context = {
         'event': event
     }
